@@ -1,6 +1,5 @@
 import './App.css'
 import { Container, Stack, Typography } from '@mui/material'
-import { JavascriptLogo } from './components/JavascriptLogo'
 import { Start } from './components/Start'
 import { useQuestionsStore } from './store/questions'
 import { Game } from './components/Game'
@@ -19,10 +18,10 @@ function App() {
             <div id='js' className='cube'>
         <div id='jsTop' className='top'> <img src={js} /></div>
         <div>
-          <img style={{ '--i': 0 }} src={js} alt="" />
-          <img style={{ '--i': 1 }} src={js} alt="" />
-          <img style={{ '--i': 2 }} src={js} alt="" />
-          <img style={{ '--i': 3 }} src={js} alt="" />
+          <img style={{ '--i': 0 } as React.CSSProperties} src={js} alt="" />
+          <img style={{ '--i': 1 } as React.CSSProperties} src={js} alt="" />
+          <img style={{ '--i': 2 } as React.CSSProperties} src={js} alt="" />
+          <img style={{ '--i': 3 } as React.CSSProperties} src={js} alt="" />
         </div>
       </div>
           <Typography variant='h2' component='h1'>

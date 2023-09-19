@@ -1,76 +1,79 @@
-import { create } from "zustand";
-import { Question } from "../types/types";
+import { create } from 'zustand'
+import { type Question } from '../types/types'
 import confetti from 'canvas-confetti'
-import { persist } from "zustand/middleware";
-
+import { persist, devtools } from 'zustand/middleware'
 
 interface State {
-    questions: Question[],
-    currentQuestion: number,
-    fetchQuestion: (limit: number) => void
-    selectAnswer: (questionId: number, answerIndex: number) => void
-    goNextQuestion: () => void
-    goPreviousQuestion: () => void
+  questions: Question[]
+  currentQuestion: number
+  fetchQuestions: (limit: number) => Promise<void>
+  selectAnswer: (questionId: number, answerIndex: number) => void
+  goNextQuestion: () => void
+  goPreviousQuestion: () => void
+  reset: () => void
 }
 
-export const useQuestionsStore = create<State>()(persist((set, get ) => {
+const API_URL = import.meta.env.PROD ? 'https://midu-react-13.surge.sh/' : 'http://localhost:5173/'
 
-    return{
-        loading: false,
-        questions:[],
-        currentQuestion: 0,
+export const useQuestionsStore = create<State>()(devtools(persist((set, get) => {
+  return {
+    loading: false,
+    questions: [],
+    currentQuestion: 0,
 
-        fetchQuestion: async (limit: number) => {
-           const res =  await fetch('http://localhost:5173/data.json')
-           const json = await res.json() 
-            
-           const questions = json.sort(() => Math.random() - 0.5).slice(0, limit)
-           set({ questions })
-            
-        },
+    fetchQuestions: async (limit: number) => {
+      const res = await fetch(`${API_URL}/data.json`)
+      const json = await res.json()
 
-        selectAnswer: (questionId: number, answerIndex: number) => {
-            const { questions } = get()
-            const newQuestions = structuredClone(questions)
-            const questionIdex = newQuestions.findIndex(q => q.id === questionId)
-            const questionInfo = newQuestions[questionIdex]
-            const isCorrectUserAnswer = questionInfo.correctAnswer === answerIndex
-            if(isCorrectUserAnswer) confetti()
-            newQuestions[questionIdex] = {
-                ... questionInfo,
-                isCorrectUserAnswer,
-                userSelectedAnswer: answerIndex
-            }
+      const questions = json.sort(() => Math.random() - 0.5).slice(0, limit)
+      set({ questions }, false, 'FETCH_QUESTIONS')
+    },
 
-            set({ questions: newQuestions})
-        },
+    selectAnswer: (questionId: number, answerIndex: number) => {
+      const { questions } = get()
+      // usar el structuredClone para clonar el objeto
+      const newQuestions = structuredClone(questions)
+      // encontramos el índice de la pregunta
+      const questionIndex = newQuestions.findIndex(q => q.id === questionId)
+      // obtenemos la información de la pregunta
+      const questionInfo = newQuestions[questionIndex]
+      // averiguamos si el usuario ha seleccionado la respuesta correcta
+      const isCorrectUserAnswer = questionInfo.correctAnswer === answerIndex
 
-        goNextQuestion: () => {
-            const { currentQuestion, questions} = get()
-            const nextQuestion = currentQuestion + 1
+      if (isCorrectUserAnswer) confetti()
 
-            if(nextQuestion < questions.length){
-                set({ currentQuestion: nextQuestion})
-            }
-        },
+      // cambiar esta información en la copia de la pregunta
+      newQuestions[questionIndex] = {
+        ...questionInfo,
+        isCorrectUserAnswer,
+        userSelectedAnswer: answerIndex
+      }
+      // actualizamos el estado
+      set({ questions: newQuestions }, false, 'SELECT_ANSWER')
+    },
 
-        goPreviousQuestion: () => {
-            const { currentQuestion } = get()
-            const previousQuestion = currentQuestion - 1
+    goNextQuestion: () => {
+      const { currentQuestion, questions } = get()
+      const nextQuestion = currentQuestion + 1
 
-            if(previousQuestion >= 0){
-                set({ currentQuestion: previousQuestion})
-            }
-        },
+      if (nextQuestion < questions.length) {
+        set({ currentQuestion: nextQuestion }, false, 'GO_NEXT_QUESTION')
+      }
+    },
 
-        reset: () => {
-            set({ currentQuestion: 0, questions: []})
-        }
+    goPreviousQuestion: () => {
+      const { currentQuestion } = get()
+      const previousQuestion = currentQuestion - 1
+
+      if (previousQuestion >= 0) {
+        set({ currentQuestion: previousQuestion }, false, 'GO_PREVIOUS_QUESTION')
+      }
+    },
+
+    reset: () => {
+      set({ currentQuestion: 0, questions: [] }, false, 'RESET')
     }
-
-    
-},
-    {
-        name: 'questions',
-    }
-))
+  }
+}, {
+  name: 'questions'
+})))

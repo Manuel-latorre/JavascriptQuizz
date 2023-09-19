@@ -1,10 +1,13 @@
 {
+  "homepage": "http://Manuel-latorre.github.io/quizz-js",
   "name": "quizz-js",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -16,12 +19,14 @@
     "@mui/icons-material": "5.14.9",
     "@mui/material": "^5.14.10",
     "canvas-confetti": "1.6.0",
+    "gh-pages": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-syntax-highlighter": "15.5.0",
     "zustand": "4.4.1"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.1",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/react-syntax-highlighter": "^15.5.7",
