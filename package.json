@@ -1,5 +1,5 @@
 {
-  "homepage": "http://Manuel-latorre.github.io/quizz-js",
+  "homepage": "http://Manuel-latorre.github.io/JavascriptQuizz",
   "name": "quizz-js",
   "private": true,
   "version": "0.0.0",
@@ -19,7 +19,6 @@
     "@mui/icons-material": "5.14.9",
     "@mui/material": "^5.14.10",
     "canvas-confetti": "1.6.0",
-    "gh-pages": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-syntax-highlighter": "15.5.0",
@@ -36,6 +35,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "gh-pages": "^6.0.0",
     "ts-standard": "^12.0.2",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
